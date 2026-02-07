@@ -1,26 +1,550 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html,
+body {
+  height: 100%;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Helvetica,
+    Arial;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+button {
+  font-family: inherit;
+  border: none;
+  background: transparent;
+}
+
+.vday {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: #ffc5cb;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.deskImageBg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.envelopeVideoWrapper {
+  position: relative;
+  width: 120vw;
+  height: 120vh;
+  max-width: none;
+  max-height: none;
+  background-color: #ffc5cb;
+  flex-shrink: 0;
+}
+
+.envelopeVideoInBg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.videoLetterboxCover {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 12%;
+  background-color: #ffc5cb;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.videoLetterboxCoverTop {
+  top: 0;
+}
+
+.videoLetterboxCoverBottom {
+  bottom: 0;
+}
+
+.openMeOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+  padding-bottom: 8%;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.openMeOverlay .openMeBtn {
+  pointer-events: auto;
+  padding: 14px 32px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+  border-radius: 999px;
+  box-shadow: 0 6px 24px rgba(194, 24, 91, 0.45);
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+.openMeOverlay .openMeBtn:hover {
+  box-shadow: 0 8px 28px rgba(194, 24, 91, 0.55);
+}
+
+.videoEndOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0;
+  z-index: 10;
+  padding: 32vh 12px 80px 12px;
+  box-sizing: border-box;
+}
+
+.videoEndOverlay .videoEndMessage {
+  max-width: 16%;
+  max-height: 48vh;
+  overflow-y: auto;
+  padding: 6px 0;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+  font-family: var(--font-handwriting), cursive;
+}
+
+.videoEndOverlay .videoEndMessageTitle {
+  font-size: clamp(0.95rem, 4vw, 1.2rem);
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 6px 0;
+  text-align: left;
+}
+
+.videoEndOverlay .videoEndMessage p {
+  font-size: clamp(0.72rem, 2.8vw, 0.95rem);
+  color: #333;
+  line-height: 1.4;
+  margin: 0 0 5px 0;
+  text-align: left;
+}
+
+.videoEndOverlay .videoEndMessage p:last-of-type {
+  margin-bottom: 0;
+}
+
+.videoEndOverlay .videoEndButtonSlot {
+  margin-top: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.videoEndOverlay .continueToNextBtn {
+  font-family: var(--font-handwriting), cursive;
+  padding: 8px 12px;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.videoEndOverlay .continueToNextBtn:hover {
+  opacity: 0.85;
+}
+
+/* Comic hint */
+.comicHint {
+  position: absolute;
+  z-index: 5;
+  left: 39%;
+  top: 53%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.hintCurvedArrow {
+  color: #e91e63;
+  filter: drop-shadow(0 2px 6px rgba(233, 30, 99, 0.35));
+  flex-shrink: 0;
+  transform: rotate(58deg) translateX(60px) translateY(-75px);
+}
+
+.hintCurvedArrow .hintArrowImg {
+  display: block;
+  width: auto;
+  height: 64px;
+  object-fit: contain;
+}
+
+/* Hotspot on real envelope */
+.hotspot {
+  position: absolute;
+  z-index: 6;
+  border-radius: 18px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.hotspot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 15%,
+    rgba(255, 255, 255, 0.35) 35%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(255, 255, 255, 0.35) 65%,
+    rgba(255, 255, 255, 0.08) 85%,
+    transparent 100%
+  );
+  background-size: 70% 100%;
+  background-repeat: no-repeat;
+  animation: hotspotShine 4s ease-in-out infinite;
+  pointer-events: none;
+  filter: blur(10px);
+  box-shadow:
+    inset 0 0 30px rgba(255, 255, 255, 0.6),
+    inset 0 0 50px rgba(255, 255, 255, 0.35);
+}
+
+@keyframes hotspotShine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.pulseRing {
+  position: absolute;
+  inset: -12px;
+  border-radius: 22px;
+  border: 2px solid rgba(255, 60, 120, 0.8);
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+.ring2 {
+  inset: -22px;
+  opacity: 0.65;
+  animation-delay: 0.2s;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.2;
+  }
+}
+
+/* Letter view: full-screen pink + paper (after video zoom transition) */
+.letterView {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.letterView > *:last-child {
+  pointer-events: auto;
+}
+
+.letterViewPink {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #ffc0cb 0%, #ffb6c1 50%, #ff9aad 100%);
+}
+
+.letterView .letter {
+  position: relative;
+  z-index: 1;
+  width: min(760px, 92vw);
+}
+
+.paper {
+  background: linear-gradient(180deg, #fef5f8 0%, #fce8ee 100%);
+  border-radius: 22px;
+  padding: 26px;
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.paperWithShadow {
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.07),
+    0 12px 24px rgba(0, 0, 0, 0.1),
+    0 24px 48px rgba(0, 0, 0, 0.12),
+    0 48px 96px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+}
+
+.paper h1 {
+  font-size: 34px;
+  margin-bottom: 12px;
+}
+
+.paper p {
+  font-size: 18px;
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+
+.paperBtns {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Buttons */
+.primary {
+  background: black;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.valYesBtn {
+  transform-origin: right center;
+  position: relative;
+  z-index: 1;
+  font-size: 22px;
+  padding: 18px 32px;
+  background: #ec4899 !important;
+  color: #fff;
+  border-radius: 28px;
+}
+
+.valButtonRow .ghost.valNoBtn {
+  font-size: 18px;
+  padding: 14px 24px;
+  border-radius: 28px;
+}
+
+.ghost {
+  background: rgba(0, 0, 0, 0.08);
+  color: black;
+  padding: 12px 18px;
+  border-radius: 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* Valentine pages */
+.valPage,
+.yesPage {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.valBg {
+  position: absolute;
+  inset: 0;
+  background: pink;
+}
+
+.valCard {
+  position: relative;
+  z-index: 2;
+  width: min(760px, 92vw);
+  min-height: 420px;
+  margin: 0 auto;
+  top: 30%;
+  background: rgba(255, 255, 255, 0.93);
+  border-radius: 22px;
+  padding: 32px 28px 36px 28px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.valCardClickable {
+  cursor: pointer;
+}
+
+.valCardOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 22px;
+  background: #ec4899;
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+}
+
+.valFlower {
+  display: block;
+  width: 160px;
+  height: auto;
+  margin: 0 auto 20px auto;
+}
+
+.valCard h1 {
+  font-size: 34px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.valCard p {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.valCardHint {
+  margin: 120px 0 0 0;
+  font-size: 11px;
+  color: #888;
+  text-align: center;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.valButtonRow {
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  flex-wrap: nowrap;
+  width: 100%;
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.valButtonRowSpacer {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.valButtonRowFull .valButtonRowSpacer {
+  flex: 0 0 0;
+  min-width: 0;
+}
+
+.valYesBtn {
+  transform-origin: center center;
+}
+
+.valNoBtn {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  transition: transform 0.15s ease-out;
+}
+
+.heart-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.heart {
+  position: absolute;
+  background-color: #ff69b4; /* Pink heart color */
+  transform: rotate(-45deg);
+  animation: fall linear infinite;
+}
+
+.heart::before,
+.heart::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #ff69b4; /* Pink heart color */
+  border-radius: 50%;
+}
+
+.heart::before {
+  top: -50%;
+  left: 0;
+}
+
+.heart::after {
+  left: 50%;
+  top: 0;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-10vh) rotate(-45deg) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0) rotate(-45deg) scale(1);
+  }
+  100% {
+    transform: translateY(100vh) rotate(-45deg) scale(1.2);
+    opacity: 0;
+  }
 }
