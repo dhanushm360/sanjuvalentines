@@ -49,7 +49,7 @@ export default function Valentine() {
     if (!fullCardMode) return;
     setYesCount((c) => {
       const next = c + 1;
-      if (next >= 2) setTimeout(() => (window.location.href = "/yes"), 0);
+      if (next >= 4) setTimeout(() => (window.location.href = "/yes"), 0);
       return next;
     });
   };
