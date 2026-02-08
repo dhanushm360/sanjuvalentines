@@ -27,7 +27,9 @@ export default function Valentine() {
         ? "YES obviously 💞"
         : yesCount === 2
           ? "OKAY YES YES 💗"
-          : "STOP IM YOURS 💍";
+          : yesCount === 3
+            ? "STOP IM YOURS 💍"
+            : "STOP IM YOURS 💍";
 
   const fullCardMode = noCount >= NO_CLICKS_FULL_CARD;
   const yesScale = 1 + noCount * 0.22;
@@ -160,71 +162,75 @@ export default function Valentine() {
           ref={rowRef}
           className={`row valButtonRow ${fullCardMode ? "valButtonRowFull" : ""}`}
         >
-          <div className="valButtonRowSpacer" aria-hidden />
-          <motion.button
-            ref={yesBtnRef}
-            className="primary valYesBtn"
-            style={{
-              minWidth: fullCardMode ? 0 : `${100 + noCount * 72}px`,
-              flexGrow: fullCardMode ? 1 : 0,
-              flexShrink: 0,
-              flexBasis: fullCardMode ? "0%" : "auto",
-            }}
-            animate={{ scale: fullCardMode ? 1 : yesScale }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            onClick={handleYesClick}
-          >
-            {yesText}
-          </motion.button>
-          <div className="valButtonRowSpacer" aria-hidden />
-          <button
-            ref={noBtnRef}
-            className="ghost valNoBtn"
-            onClick={handleNoClick}
-            onMouseEnter={() => {
-              if (
-                noStuck ||
-                fullCardMode ||
-                noButtonFrozen ||
-                !cardRef.current ||
-                !noBtnRef.current
-              )
-                return;
-              const card = cardRef.current.getBoundingClientRect();
-              const noBtn = noBtnRef.current.getBoundingClientRect();
-              const yesBtn = yesBtnRef.current?.getBoundingClientRect();
-              const padding = 24;
-              const cardPadding = 28;
-              const gap = 8;
-              const minXCard = card.left + cardPadding - noBtn.left + padding;
-              const maxX =
-                card.right - cardPadding - noBtn.width - noBtn.left - padding;
-              const minY = card.top + cardPadding - noBtn.top + padding;
-              const maxY =
-                card.bottom - cardPadding - noBtn.height - noBtn.top - padding;
-              const minXNoOverlap =
-                yesBtn != null ? yesBtn.right - noBtn.left + gap : minXCard;
-              const minX = Math.max(minXCard, minXNoOverlap);
-              const moveHorizontal = Math.random() < 0.5;
-              const maxJump = 36;
-              const x = moveHorizontal
-                ? Math.min(
-                    maxX,
-                    Math.max(minX, (Math.random() - 0.5) * maxJump * 2),
-                  )
-                : 0;
-              const y = moveHorizontal
-                ? 0
-                : Math.min(
-                    maxY,
-                    Math.max(minY, (Math.random() - 0.5) * maxJump * 2),
-                  );
-              noTranslateRef.current = { x, y };
-              noBtnRef.current.style.transform = `translate(${x}px, ${y}px)`;
-            }}
-          >
-            No
-          </button>
+          <div className="valButtonGroup">
+            <motion.button
+              ref={yesBtnRef}
+              className="primary valYesBtn"
+              style={{
+                minWidth: fullCardMode ? 0 : `${100 + noCount * 72}px`,
+                flexGrow: fullCardMode ? 1 : 0,
+                flexShrink: 0,
+                flexBasis: fullCardMode ? "0%" : "auto",
+              }}
+              animate={{ scale: fullCardMode ? 1 : yesScale }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              onClick={handleYesClick}
+            >
+              {yesText}
+            </motion.button>
+            <button
+              ref={noBtnRef}
+              className="ghost valNoBtn"
+              onClick={handleNoClick}
+              onMouseEnter={() => {
+                if (
+                  noStuck ||
+                  fullCardMode ||
+                  noButtonFrozen ||
+                  !cardRef.current ||
+                  !noBtnRef.current
+                )
+                  return;
+                const card = cardRef.current.getBoundingClientRect();
+                const noBtn = noBtnRef.current.getBoundingClientRect();
+                const yesBtn = yesBtnRef.current?.getBoundingClientRect();
+                const padding = 24;
+                const cardPadding = 28;
+                const gap = 8;
+                const minXCard = card.left + cardPadding - noBtn.left + padding;
+                const maxX =
+                  card.right - cardPadding - noBtn.width - noBtn.left - padding;
+                const minY = card.top + cardPadding - noBtn.top + padding;
+                const maxY =
+                  card.bottom -
+                  cardPadding -
+                  noBtn.height -
+                  noBtn.top -
+                  padding;
+                const minXNoOverlap =
+                  yesBtn != null ? yesBtn.right - noBtn.left + gap : minXCard;
+                const minX = Math.max(minXCard, minXNoOverlap);
+                const moveHorizontal = Math.random() < 0.5;
+                const maxJump = 36;
+                const x = moveHorizontal
+                  ? Math.min(
+                      maxX,
+                      Math.max(minX, (Math.random() - 0.5) * maxJump * 2),
+                    )
+                  : 0;
+                const y = moveHorizontal
+                  ? 0
+                  : Math.min(
+                      maxY,
+                      Math.max(minY, (Math.random() - 0.5) * maxJump * 2),
+                    );
+                noTranslateRef.current = { x, y };
+                noBtnRef.current.style.transform = `translate(${x}px, ${y}px)`;
+              }}
+            >
+              No
+            </button>
+          </div>
         </div>
         {!fullCardMode && (
           <p className="valCardHint">

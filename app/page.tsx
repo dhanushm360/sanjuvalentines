@@ -10,6 +10,7 @@ export default function Page() {
   const [hasClickedOpenMe, setHasClickedOpenMe] = useState(false);
   const [showEndPlaceholder, setShowEndPlaceholder] = useState(false);
   const [showContinueButton, setShowContinueButton] = useState(false);
+  const [videoZoomAtSeven, setVideoZoomAtSeven] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const envelopeHotspot = useMemo<CSSProperties>(() => {
@@ -28,6 +29,7 @@ export default function Page() {
     setHasClickedOpenMe(false);
     setShowEndPlaceholder(false);
     setShowContinueButton(false);
+    setVideoZoomAtSeven(false);
     // Start playback immediately on user gesture (required by browsers for unmuted/muted play)
     const video = videoRef.current;
     if (video) {
@@ -123,6 +125,21 @@ export default function Page() {
     return () => video.removeEventListener("timeupdate", checkShowPlaceholder);
   }, [hasStartedVideo, showEndPlaceholder]);
 
+  // At 7s: seamless zoom in on video
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!hasStartedVideo || !video || videoZoomAtSeven) return;
+
+    const onTimeUpdate = () => {
+      if (video.currentTime >= 7) {
+        setVideoZoomAtSeven(true);
+      }
+    };
+
+    video.addEventListener("timeupdate", onTimeUpdate);
+    return () => video.removeEventListener("timeupdate", onTimeUpdate);
+  }, [hasStartedVideo, videoZoomAtSeven]);
+
   // Show continue button 10 seconds after placeholder is shown
   useEffect(() => {
     if (!showEndPlaceholder || showContinueButton) return;
@@ -142,8 +159,16 @@ export default function Page() {
       >
         <motion.div
           className="envelopeVideoWrapper"
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.85, ease: [0.25, 0.46, 0.45, 0.94] }}
+          animate={{
+            scale: videoZoomAtSeven ? 1.5 : 1,
+            opacity: 1,
+          }}
+          transition={{
+            duration: videoZoomAtSeven ? 3.5 : 0.85,
+            ease: videoZoomAtSeven
+              ? [0.22, 0.61, 0.36, 1]
+              : [0.25, 0.46, 0.45, 0.94],
+          }}
         >
           <video
             ref={videoRef}
@@ -203,51 +228,55 @@ export default function Page() {
                 <div className="videoEndMessage">
                   {[
                     { text: "Hi sanju banju,", title: true },
+                    { spacer: true },
                     {
-                      text: "We are far apart rn, but I still wanted to do something that feels like I'm right there with u.",
+                      text: "We're far apart right now, but I still wanted to do something that feels like I'm right there with you.",
                     },
-                    { text: "So I left you this on your desk." },
+                    { spacer: true },
+                    { text: "So I left this on your desk." },
+                    { spacer: true },
                     {
-                      text: "u make my days better, my life more dramatic (which I love), and my heart so full.",
+                      text: "You make my days better, my heart feel full, and my life more dramatic (which I love). Even from far away, you've become the most constant part of my life.",
                     },
+                    { spacer: true },
                     {
-                      text: "Even from far away, you've become the most constant part of my life.",
-                    },
-                    {
-                      text: "I don't just miss u, I miss the little things.",
-                    },
-                    {
-                      text: "ur touch. ur laugh. ur presence.",
+                      text: "I miss you — but I miss the little things too.",
                     },
                     {
-                      text: "The way u make everything feel fuller.",
+                      text: "Your laugh. Your touch. Your presence.",
                     },
                     {
-                      text: "I love u in the quiet ways, in the small moments, in the random convos, in the comfort you bring me.",
+                      text: "The way you make everything feel like more.",
                     },
+                    { spacer: true },
                     {
-                      text: "And even though we're not in the same place, you still feel like home to me.",
+                      text: "And even though we're not in the same place right now, you still feel like home to me. But I hope we'll be in the same place soon.",
                     },
+                    { spacer: true },
                     {
-                      text: "That's why I needed to ask u something....",
+                      text: "So I need to ask you something…",
                     },
-                  ].map((line, i) => (
-                    <motion.p
-                      key={i}
-                      className={
-                        line.title ? "videoEndMessageTitle" : undefined
-                      }
-                      initial={{ opacity: 0, y: -6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{
-                        duration: 0.35,
-                        delay: i * 0.12,
-                        ease: "easeOut",
-                      }}
-                    >
-                      {line.text}
-                    </motion.p>
-                  ))}
+                  ].map((line, i) =>
+                    "spacer" in line && line.spacer ? (
+                      <div key={i} className="videoEndMessageSpacer" />
+                    ) : (
+                      <motion.p
+                        key={i}
+                        className={
+                          line.title ? "videoEndMessageTitle" : undefined
+                        }
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.35,
+                          delay: i * 0.12,
+                          ease: "easeOut",
+                        }}
+                      >
+                        {line.text}
+                      </motion.p>
+                    ),
+                  )}
                 </div>
                 <div className="videoEndButtonSlot">
                   {showContinueButton && (
@@ -261,7 +290,7 @@ export default function Page() {
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      continue →
+                      okay... →
                     </motion.button>
                   )}
                 </div>
