@@ -20,7 +20,7 @@ export default function Page() {
       width: "6.2%",
       height: "6.5%",
       // Adjust skew (e.g. skewX for left/right tilt, skewY for forward/back), rotate for overlay tilt:
-      transform: "rotate(6deg) skewX(-15deg) skewY(10deg)",
+      transform: "rotate(4deg) skewX(-15deg) skewY(10deg)",
     };
   }, []);
 
