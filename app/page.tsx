@@ -240,7 +240,7 @@ export default function Page() {
                     },
                     { spacer: true },
                     {
-                      text: "I miss you — but I miss the little things too.",
+                      text: "I miss you, but I miss the little things too.",
                     },
                     {
                       text: "Your laugh. Your touch. Your presence.",
@@ -254,7 +254,7 @@ export default function Page() {
                     },
                     { spacer: true },
                     {
-                      text: "So I need to ask you something…",
+                      text: "And that's why I need to ask you something…",
                     },
                   ].map((line, i) =>
                     "spacer" in line && line.spacer ? (
