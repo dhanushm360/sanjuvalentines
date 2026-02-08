@@ -265,13 +265,9 @@ export default function Page() {
                         className={
                           line.title ? "videoEndMessageTitle" : undefined
                         }
-                        initial={{ opacity: 0, y: -6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                          duration: 0.35,
-                          delay: i * 0.12,
-                          ease: "easeOut",
-                        }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.25 }}
                       >
                         {line.text}
                       </motion.p>
