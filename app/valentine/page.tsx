@@ -7,7 +7,7 @@ const NO_CLICKS_TO_YES = 10;
 const NO_CLICKS_FULL_CARD = 6;
 const CURSOR_MIN_DIST_PX = 60;
 const MAX_PUSH_PX = 14;
-const FREEZE_AFTER_MS = 6000;
+const FREEZE_AFTER_MS = 20000;
 
 export default function Valentine() {
   const [yesCount, setYesCount] = useState(0);
